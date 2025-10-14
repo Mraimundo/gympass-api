@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import "dotenv/config";
+import { execSync } from "node:child_process";
 import { randomUUID } from "node:crypto";
 
 import type { Environment } from "vitest/environments";
@@ -23,6 +24,8 @@ export default <Environment>{
     console.log(`Using database databaseUrl "${databaseUrl}" for testing.`);
 
     process.env.DATABASE_URL = databaseUrl;
+
+    execSync("npx prisma migrate deploy");
 
     return {
       async teardown() {
