@@ -1,6 +1,6 @@
 import { expect, describe, it, beforeEach } from "vitest";
 import { SearchGymsUseCase } from "./seach-gyms";
-import { InMemoryGymsRepository } from "@/repositories/in-memory/in-memory-gyms-repository";
+import { InMemoryGymsRepository } from "../repositories/in-memory/in-memory-gyms-repository";
 
 let gymsRepository: InMemoryGymsRepository;
 let sut: SearchGymsUseCase;
