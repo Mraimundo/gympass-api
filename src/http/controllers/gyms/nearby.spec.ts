@@ -1,7 +1,7 @@
 import request from "supertest";
-import { app } from "@/app";
+import { app } from "../../../app";
 import { afterAll, beforeAll, describe, it, expect } from "vitest";
-import { createAndAuthenticateUser } from "@/utils/test/create-and-authenticate-user";
+import { createAndAuthenticateUser } from "../../../utils/test/create-and-authenticate-user";
 
 describe("Search Gym (e2e)", () => {
   beforeAll(async () => {
