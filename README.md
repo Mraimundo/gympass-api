@@ -3,6 +3,7 @@
 Aplicação estilo GymPass construída com Fastify, TypeScript, Prisma e PostgreSQL. Inclui autenticação JWT, controle de acesso por função (ADMIN/MEMBER), regras de negócio para check-ins e um conjunto de testes unitários e E2E.
 
 ## Sumário
+
 - Sobre o projeto
 - Tecnologias
 - Pré-requisitos
@@ -20,6 +21,7 @@ Aplicação estilo GymPass construída com Fastify, TypeScript, Prisma e Postgre
 ## Sobre o projeto
 
 Funcionalidades principais:
+
 - Cadastro e autenticação de usuários
 - Perfil do usuário autenticado
 - Cadastro de academias (apenas ADMIN)
@@ -28,6 +30,7 @@ Funcionalidades principais:
 - Histórico e métricas de check-ins do usuário
 
 Regras de negócio (resumo):
+
 - E-mail único por usuário
 - Um check-in por dia por academia
 - Check-in permitido somente próximo à academia (100m)
@@ -35,6 +38,7 @@ Regras de negócio (resumo):
 - Ações administrativas restritas a usuários com role ADMIN
 
 ## Tecnologias
+
 - Node.js + TypeScript
 - Fastify 5
 - Zod para validação
@@ -45,47 +49,57 @@ Regras de negócio (resumo):
 - Docker (PostgreSQL via docker-compose)
 
 ## Pré-requisitos
+
 - Node.js 18+ (recomendado 20+)
 - npm (ou outro gerenciador, mas este projeto usa package-lock.json)
 - Docker + Docker Compose (para subir PostgreSQL)
 
 ## Configuração e execução
 
-1) Instale as dependências
+1. Instale as dependências
+
 - npm install
 
-2) Configure variáveis de ambiente
+2. Configure variáveis de ambiente
+
 - Copie o arquivo .env.exemple para .env e ajuste conforme necessário
   - cp .env.exemple .env
 
 Variáveis disponíveis (padrão do exemplo):
+
 - NODE_ENV=dev
-- JWT_SECRET=supersecretkey
-- DATABASE_URL=postgres://docker:docker@localhost:5432/gympassapi?schema=public
+- JWT_SECRET=
+- DATABASE_URL=
 - PORT=3333
 
-3) Suba o banco via Docker
+3. Suba o banco via Docker
+
 - docker compose up -d
 
-4) Gere o Prisma Client e aplique as migrations
+4. Gere o Prisma Client e aplique as migrations
+
 - npx prisma generate
 - npx prisma migrate deploy
   - Em ambiente de desenvolvimento você também pode usar: npx prisma migrate dev
 
-5) Execute a aplicação em desenvolvimento
+5. Execute a aplicação em desenvolvimento
+
 - npm run dev
   - Servidor em http://localhost:3333
 
-6) Build e execução em produção (opcional)
+6. Build e execução em produção (opcional)
+
 - npm run build
 - npm start
 
 ## Banco de dados e Prisma
+
 - O datasource está configurado em prisma/schema.prisma usando a variável DATABASE_URL.
 - O client do Prisma é gerado em generated/prisma (veja o generator no schema.prisma). Caso veja erros de import do PrismaClient, rode npx prisma generate.
 - Para inspecionar os dados localmente, você pode usar: npx prisma studio
 
 ## Scripts NPM
+
 - dev: Inicia o servidor em modo watch com tsx
 - build: Gera build com tsup
 - start: Executa o servidor compilado (build/server.js)
@@ -97,9 +111,11 @@ Variáveis disponíveis (padrão do exemplo):
 - test:coverage: Gera relatório de cobertura
 
 ## Endpoints principais (com exemplos)
+
 Base URL: http://localhost:3333
 
 Usuários
+
 - POST /users - Cadastro
   - body: { name: string, email: string, password: string }
   - 201 Created
@@ -114,6 +130,7 @@ Usuários
   - 200 OK { id, name, email, role, created_at }
 
 Academias (requer JWT)
+
 - GET /gyms/search?q=academia&page=1 - Busca por nome
   - 201 OK { gyms: Gym[] }
 - GET /gyms/nearby?latitude=-23.5&longitude=-46.6 - Próximas
@@ -123,6 +140,7 @@ Academias (requer JWT)
   - 201 Created
 
 Check-ins (requer JWT)
+
 - POST /gyms/:gymId/check-ins - Realiza check-in na academia
   - body: { latitude: number, longitude: number }
   - 201 Created
@@ -134,6 +152,7 @@ Check-ins (requer JWT)
   - 204 No Content
 
 Exemplos de requisições (curl)
+
 - Cadastro
   - curl -X POST http://localhost:3333/users \
     -H "Content-Type: application/json" \
@@ -182,6 +201,7 @@ Exemplos de requisições (curl)
     -H "Authorization: Bearer TOKEN"
 
 ## Autenticação e autorização
+
 - O login retorna um access token (JWT) que deve ser enviado no header Authorization: Bearer <token>.
 - Um refresh token é definido em cookie HttpOnly na autenticação e no endpoint de refresh. Importante: o cookie é configurado com secure: true e sameSite: true. Em ambientes HTTP (sem HTTPS) alguns clientes não armazenam cookies com a flag secure. Para testar o fluxo de refresh localmente:
   - Use um cliente que tolere cookies secure em localhost via HTTP, ou rode o servidor atrás de HTTPS, ou ajuste o código para secure: false somente em dev (não recomendado em produção).
@@ -190,6 +210,7 @@ Exemplos de requisições (curl)
   - MEMBER: uso normal da aplicação
 
 ## Testes
+
 - Pré-requisito: o PostgreSQL deve estar rodando (docker compose up -d).
 - Testes unitários: npm test ou npm run test:watch
 - Testes E2E: npm run test:e2e ou npm run test:e2e:watch
@@ -197,14 +218,17 @@ Exemplos de requisições (curl)
 - Observação: o ambiente E2E cria um schema temporário por execução (prisma/vitest-environment-prisma). As migrations são aplicadas automaticamente (npx prisma migrate deploy) e o schema é descartado no teardown.
 
 ## CI/CD
+
 - Workflows de GitHub Actions para testes unitários e E2E (arquivos em .github/workflows/). Os pipelines executam os scripts de testes definidos no package.json.
 
 ## Convenções de código
+
 - TypeScript com strict
 - ESLint (configuração em eslint.config.mts)
 - Estilo recomendado: npx eslint . --ext .ts
 
 ## Troubleshooting
+
 - PrismaClient not found / import errors
   - Rode npx prisma generate
 - Erro de conexão com banco
@@ -215,4 +239,5 @@ Exemplos de requisições (curl)
   - O cookie usa secure: true. Em HTTP, clientes podem ignorá-lo. Use HTTPS ou um cliente que permita cookies secure em localhost para testar o fluxo de refresh
 
 ## Licença
+
 - ISC
