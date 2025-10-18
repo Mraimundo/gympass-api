@@ -1,7 +1,7 @@
 import { Gym, Prisma } from "generated/prisma/client";
 import { randomUUID } from "node:crypto";
 import { FindManyNearbyParams } from "../gyms-repository";
-import { getDistanceBetweenCoordinates } from "@/utils/get-distance-between-coordinate";
+import { getDistanceBetweenCoordinates } from "../../utils/get-distance-between-coordinate";
 
 export class InMemoryGymsRepository {
   public gyms: Gym[] = [];
