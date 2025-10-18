@@ -2,7 +2,7 @@ import { CheckIn } from "generated/prisma";
 import { CheckInsRepository } from "@/repositories/check-ins-repository";
 import { GymsRepository } from "@/repositories/gyms-repository";
 import { ResouceNotFoundError } from "./errors/resouce-not-found-error";
-import { getDistanceBetweenCoordinates } from "@/utils/get-distance-between-coordinate";
+import { getDistanceBetweenCoordinates } from "../utils/get-distance-between-coordinate";
 import { MaxNumberOfCheckInsError } from "./errors/max-number-of-check-ins-error";
 import { MaxDistanceError } from "./errors/max-distance-error";
 
